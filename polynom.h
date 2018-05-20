@@ -16,18 +16,20 @@ public:
 	Polynom();
 	Polynom(std::vector<std::pair<double, int>> &, char);
 	~Polynom();
-	Polynom operator+(const Polynom &) const;
-	Polynom operator-(const Polynom &) const;
-	Polynom operator*(const Polynom &) const;
+	Polynom operator+(const Polynom & p) const;
+	Polynom operator-(const Polynom & p) const;
+	Polynom operator*(const Polynom & p) const;
+	Polynom operator*(const double k) const;
 	Polynom & operator=(const Polynom & p);
 	Polynom & operator+=(const Polynom & p);
 	Polynom & operator-=(const Polynom & p);
 	Polynom & operator*=(const Polynom & p);
-	friend std::istream & operator>>(std::istream &, Polynom &);
-	friend std::ostream & operator<<(std::ostream &, const Polynom &);
-	Polynom exponent(int);
-	Polynom & change_var(const Polynom &);
-	Polynom & derivative();
+	friend Polynom operator*(const double k, const Polynom & p);
+	friend std::istream & operator>>(std::istream & is, Polynom & p);
+	friend std::ostream & operator<<(std::ostream & os, const Polynom & p);
+	Polynom exponent(int n);
+	Polynom change_var(Polynom & p);
+	Polynom derivative();
 };
 
 #endif

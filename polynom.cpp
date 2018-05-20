@@ -8,22 +8,22 @@
 
 Polynom::Polynom() {
 	variable = 'x';
-	coeff.push_back(std::make_pair(0, 0));
+	coeff.resize(0);
 	degree = 0;
 }
 
 Polynom::Polynom(std::vector<std::pair<double, int>> & _coeff, char _variable) {
 	variable = _variable;
 	std::sort(_coeff.begin(), _coeff.end(), [](auto &left, auto &right) {
-		return left.second > right.second;
+		return left.second < right.second;
 	});
 	degree = _coeff.begin() -> second;
-	for (int i = degree; i >= 0; --i) {
-		auto j = _coeff.end();
+	for (int i = 0; i <= degree; ++i) {
+		auto j = _coeff.begin();
 		if (j -> second != i)
 			coeff.push_back(std::make_pair(0, i));
 		else
-			coeff.push_back(std::make_pair((j--) -> first, i));
+			coeff.push_back(std::make_pair((j++) -> first, i));
 	}
 }
 
@@ -60,7 +60,7 @@ Polynom Polynom::operator+(const Polynom & p) const {
 	Polynom q;
 	q.degree = (degree > p.degree ? degree : p.degree);
 	q.variable = variable;
-	for (int i = (degree < p.degree ? degree : p.degree); i >= 0; --i)
+	for (int i = 0; i <= (degree < p.degree ? degree : p.degree); ++i)
 		q.coeff.push_back(std::make_pair(coeff[i].first + p.coeff[i].first, i));
 	return q;
 }
@@ -69,11 +69,11 @@ Polynom Polynom::operator-(const Polynom & p) const {
 	Polynom q;
 	q.degree = (degree > p.degree ? degree : p.degree);
 	q.variable = variable;
-	for (int i = (degree < p.degree ? degree : p.degree); i >= 0; --i)
+	for (int i = 0; i <= (degree < p.degree ? degree : p.degree); ++i)
 		q.coeff.push_back(std::make_pair(coeff[i].first - p.coeff[i].first, i));
 	return q;
 }
-
+// Change it
 Polynom Polynom::operator*(const Polynom & p) const {
 	Polynom q;
 	q.variable = variable;
@@ -87,6 +87,9 @@ Polynom Polynom::operator*(const Polynom & p) const {
 		}
 		q.coeff.push_back(std::make_pair(a, i));
 	}
+	std::sort(q.coeff.begin(), q.coeff.end(), [](auto &left, auto &right) {
+	return left.second < right.second;
+	});
 	return q;
 }
 
@@ -95,6 +98,19 @@ Polynom & Polynom::operator=(const Polynom & p) {
 	degree = p.degree;
 	coeff = p.coeff;
 	return *this;
+}
+
+Polynom Polynom::operator*(const double k) const {
+	Polynom q;
+	q.degree = degree;
+	q.variable = variable;
+	for (int i = 0; i <= degree; ++i)
+		q.coeff[i].first *= k;
+	return q;
+}
+
+Polynom operator*(const double k, const Polynom & p) {
+	return p * k;
 }
 
 Polynom & Polynom::operator+=(const Polynom & p) {
@@ -112,8 +128,9 @@ Polynom & Polynom::operator*=(const Polynom & p) {
 	return *this;	
 }
 
-Polynom & Polynom::exponent(Polynom p, int n) {
+Polynom Polynom::exponent(Polynom & p, int n) {
 	*this = p;
+	degree *= n;
 	--n;
 	while (n) {
 		if (n % 2)
@@ -123,3 +140,21 @@ Polynom & Polynom::exponent(Polynom p, int n) {
 	}
 	return *this;
 }
+
+Polynom Polynom::change_var(Polynom p) {
+	Polynom q;
+	q.variable = p.variable;
+	for (int i = 1; i <= degree; ++i) {
+		q += p * coeff[i].first;
+		p *= p;
+	}
+	return q;
+}
+
+Polynom & Polynom::derivative() {
+	for (int i = degree; i > 0; --i) {
+		
+	}
+	return ;
+}
+
