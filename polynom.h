@@ -1,34 +1,41 @@
 #ifndef POLYNOM_H_
 #define POLYNOM_H_
 
-#include <vector>
-#include <utility>
 #include <iostream>
+#include <vector>
+#include <string>
 
-const int STR_MAX_SIZE = 1000;
+template <typename T>
+T exp(T t1, int n);
 
 class Polynom {
 private:
-	std::vector<std::pair<double, int>> coeff;
-	char variable;
-	int degree;
+	friend class Interface;
+	std::string name;
+	char var;
+	int deg;
+	std::vector<double> coef;
 public:
 	Polynom();
-	Polynom(std::vector<std::pair<double, int>> &, char);
+	Polynom(const std::string & _name, const char _var, const std::vector<double> & _coef);
+	Polynom(const Polynom & p);
+	Polynom(std::string & polynom);
+	Polynom(int k);
 	~Polynom();
-	Polynom operator+(const Polynom & p) const;
-	Polynom operator-(const Polynom & p) const;
-	Polynom operator*(const Polynom & p) const;
-	Polynom operator*(const double k) const;
-	Polynom & operator=(const Polynom & p);
-	Polynom & operator+=(const Polynom & p);
-	Polynom & operator-=(const Polynom & p);
-	Polynom & operator*=(const Polynom & p);
-	friend Polynom operator*(const double k, const Polynom & p);
+	friend const Polynom & operator+(const Polynom & p);
+	friend const Polynom operator+(const Polynom & p, const Polynom & q);
+	friend const Polynom operator-(const Polynom & p);
+	friend const Polynom operator-(const Polynom & p, const Polynom & q);
+	friend const Polynom operator*(const Polynom & p, const Polynom & q);
 	friend std::istream & operator>>(std::istream & is, Polynom & p);
-	friend std::ostream & operator<<(std::ostream & os, const Polynom & p);
-	Polynom exponent(int n);
-	Polynom change_var(Polynom & p);
+	friend std::ostream & operator<<(std::ostream & os, Polynom & p);
+	Polynom & operator=(const Polynom & p);
+	Polynom & operator=(int k);
+	friend Polynom & operator+=(Polynom & p, const Polynom & q);
+	friend Polynom & operator-=(Polynom & p, const Polynom & q);
+	friend Polynom & operator*=(Polynom & p, const Polynom & q);
+	Polynom & change_name(char *new_name);
+	Polynom change_var(const Polynom & sub);
 	Polynom derivative();
 };
 
